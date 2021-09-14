@@ -1,0 +1,38 @@
+#!/bin/bash
+set -e
+# By SkylineIsBack
+
+clear
+echo "
+           _____ ____   _____ 
+     /\   / ____/ __ \ / ____|
+    /  \ | |   | |  | | |     
+   / /\ \| |   | |  | | |     
+  / ____ \ |___| |__| | |____ 
+ /_/    \_\_____\____/ \_____|
+                              "
+echo "Accent Color Overlay Compiler"
+echo ""
+defaultlocation="$(dirname $(readlink -f $0))"
+echo "Listing overlays present in /vendor/overlay/ directory:"
+ls /vendor/overlay/
+echo ""
+echo "Listing overlays present in backup directory:"
+ls $defaultlocation/backup/
+echo ""
+echo "Which overlay do you want to delete?"
+read whattodelete
+su -c mount -o rw,remount /vendor
+su -c rm -rf /vendor/overlay/$whattodelete
+rm -rf $defaultlocation/backup/$whattodelete
+echo ""
+echo "Deleted successfully"
+echo ""
+read -p 'Do you want to reboot device? (y/n) ' rebootdevice
+if [[ "$rebootdevice" == "y" ]];
+then
+    su -c reboot
+else
+    echo "Exiting"
+    exit
+fi

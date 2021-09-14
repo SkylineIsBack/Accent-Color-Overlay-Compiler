@@ -1,0 +1,35 @@
+#!/bin/bash
+set -e
+# By SkylineIsBack
+
+clear
+echo "
+           _____ ____   _____ 
+     /\   / ____/ __ \ / ____|
+    /  \ | |   | |  | | |     
+   / /\ \| |   | |  | | |     
+  / ____ \ |___| |__| | |____ 
+ /_/    \_\_____\____/ \_____|
+                              "
+echo "Accent Color Overlay Compiler"
+echo ""
+defaultlocation="$(dirname $(readlink -f $0))"
+echo "Listing all overlays present in backup directory:"
+ls $defaultlocation/backup/
+echo ""
+echo "Either type the name of the overlay you want to re-copy or type * for re-copying all files"
+read whattocopy
+su -c mount -o rw,remount /vendor
+su -c cp -r $defaultlocation/backup/"$whattocopy" /vendor/overlay/
+su -c chmod 644 /vendor/overlay/"$whattocopy"
+echo ""
+echo "Copied successfully"
+echo ""
+read -p 'Do you want to reboot device? (y/n) ' rebootdevice
+if [[ "$rebootdevice" == "y" ]];
+then
+    su -c reboot
+else
+    echo "Exiting"
+    exit
+fi
